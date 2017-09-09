@@ -4,7 +4,7 @@ defined in the RFC4493 and NIST special publication 800-38B, "Recommendation
 for Block Cipher Modes of Operation: The CMAC Mode for Authentication", May 2005.
 
 It achieves a security goal similar to that of HMAC, but uses a symmetric key
-block cipher like AES. CMAC is aprropriate for information systems in which a
+block cipher like AES. CMAC is appropriate for information systems in which a
 block cipher is more readily available than a hash function.
 
 Like HMAC, CMAC uses a key to sign a message. The receiver verifies the
