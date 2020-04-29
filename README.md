@@ -12,7 +12,7 @@ block cipher is more readily available than a hash function.
 Like HMAC, CMAC uses a key to sign a message. The receiver verifies the
 Massage Authenticating Code by recomputing it using the same key.
 
-## Instalation
+## Installation
 
     go get -u github.com/chmike/cmac-go
 
