@@ -1,5 +1,5 @@
 
-#Cipher-based Message Authentication Code
+# Cipher-based Message Authentication Code
 
 This package implements the Cipher-based Message Authentication Code as
 defined in the RFC4493 and NIST special publication 800-38B, "Recommendation
