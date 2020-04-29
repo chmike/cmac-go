@@ -18,27 +18,29 @@ Massage Authenticating Code by recomputing it using the same key.
 
 ## Usage example
 
-    import (
-        "crypto/aes"
+```go
+import (
+    "crypto/aes"
 
-        "github.com/chmike/cmac-go"
-    )
+    "github.com/chmike/cmac-go"
+)
 
-    // Instantiate the cmac hash.Hash.
-    cm, err := cmac.New(aes.NewCipher, key)
-    if err != nil {
-        // ...
-    }
+// Instantiate the cmac hash.Hash.
+cm, err := cmac.New(aes.NewCipher, key)
+if err != nil {
+    // ...
+}
 
-    // Compute the CMAC of a message. Never returns an error.
-    // The parameter may be an empty slice or nil.
-    cm.Write([]byte("some message"))
+// Compute the CMAC of a message. Never returns an error.
+// The parameter may be an empty slice or nil.
+cm.Write([]byte("some message"))
 
-    // Get the computed MAC.
-    mac1 := cm.Sum(nil)
+// Get the computed MAC.
+mac1 := cm.Sum(nil)
 
-    // Important: use cmac.Equal() instead of bytes.Equal().
-    // It doesn't leak timing information.
-    if !cmac.Equal(mac1, mac2) {
-        // mac mismatch
-    }
+// Important: use cmac.Equal() instead of bytes.Equal().
+// It doesn't leak timing information.
+if !cmac.Equal(mac1, mac2) {
+    // mac mismatch
+}
+```
