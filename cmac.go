@@ -92,14 +92,10 @@ func New(newCipher NewCipherFunc, key []byte) (hash.Hash, error) {
 	c.Encrypt(cm.k1, cm.k1)
 	tmp := cm.k1[0]
 	shiftLeftOneBit(cm.k1, cm.k1)
-	if tmp&0x80 == 0x80 {
-		cm.k1[bs-1] ^= 0x87
-	}
+	cm.k1[bs-1] ^= 0x87 & byte(int8(tmp)>>7) // xor with 0x87 when most significant bit of tmp is 1
 	tmp = cm.k1[0]
 	shiftLeftOneBit(cm.k2, cm.k1)
-	if tmp&0x80 == 0x80 {
-		cm.k2[bs-1] ^= 0x87
-	}
+	cm.k2[bs-1] ^= 0x87 & byte(int8(tmp)>>7) // xor with 0x87 when most significant bit of tmp is 1
 	return cm, nil
 }
 
@@ -112,7 +108,7 @@ func shiftLeftOneBit(dst, src []byte) {
 	for i := len(src) - 1; i >= 0; i-- {
 		var tmp = src[i]
 		dst[i] = (tmp << 1) | overflow
-		overflow = (tmp >> 7) & 1
+		overflow = tmp >> 7
 	}
 }
 
