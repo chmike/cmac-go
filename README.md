@@ -14,7 +14,7 @@ Massage Authenticating Code by recomputing it using the same key.
 
 ## Installation
 
-    go get -u github.com/chmike/cmac-go
+    go get github.com/chmike/cmac-go
 
 ## Usage example
 

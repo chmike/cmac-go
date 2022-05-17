@@ -68,9 +68,9 @@ K1 and K2 have the size of a block and are computed as follow:
 */
 
 type cmac struct {
-	blockSize   int
-	mac, k1, k2 []byte
-	cipher      cipher.Block
+	blockSize, n   int
+	mac, k1, k2, x []byte
+	cipher         cipher.Block
 }
 
 // NewCipherFunc instantiates a block cipher
@@ -85,9 +85,8 @@ func New(newCipher NewCipherFunc, key []byte) (hash.Hash, error) {
 	var bs = c.BlockSize()
 	var cm = new(cmac)
 	cm.blockSize = bs
-	cm.mac = make([]byte, 3*bs)
-	cm.k1, cm.k2 = cm.mac[bs:2*bs], cm.mac[2*bs:]
-	cm.mac = cm.mac[:bs]
+	b := make([]byte, 4*bs)
+	cm.mac, cm.k1, cm.k2, cm.x = b[:bs], b[bs:2*bs], b[2*bs:3*bs], b[3*bs:4*bs]
 	cm.cipher = c
 	c.Encrypt(cm.k1, cm.k1)
 	tmp := cm.k1[0]
@@ -112,41 +111,52 @@ func shiftLeftOneBit(dst, src []byte) {
 	}
 }
 
-// Write computes the cmac over m.
+// Write accumulates the bytes in m in the cmac computation.
 func (c *cmac) Write(m []byte) (n int, err error) {
 	n = len(m)
+	if l := c.blockSize - c.n; len(m) > l {
+		xor(c.x[c.n:], m[:l])
+		m = m[l:]
+		c.cipher.Encrypt(c.x, c.x)
+		c.n = 0
+	}
 	for len(m) > c.blockSize {
-		for i := range c.mac {
-			c.mac[i] ^= m[i]
-		}
-		c.cipher.Encrypt(c.mac, c.mac)
+		xor(c.x, m[:c.blockSize])
 		m = m[c.blockSize:]
+		c.cipher.Encrypt(c.x, c.x)
 	}
-	if len(m) == c.blockSize {
-		for i := range c.mac {
-			c.mac[i] ^= c.k1[i] ^ m[i]
-		}
-	} else {
-		for i := range c.mac {
-			c.mac[i] ^= c.k2[i]
-		}
-		for i := range m {
-			c.mac[i] ^= m[i]
-		}
-		c.mac[len(m)] ^= 0x80
+	if len(m) > 0 {
+		xor(c.x[c.n:], m)
+		c.n += len(m)
 	}
-	c.cipher.Encrypt(c.mac, c.mac)
 	return
 }
 
-func (c *cmac) Sum(in []byte) []byte {
-	return append(in, c.mac...)
+// Sum returns the CMAC appended to m. m may be nil. Write may be called after Sum.
+func (c *cmac) Sum(m []byte) []byte {
+	if c.n == c.blockSize {
+		copy(c.mac, c.k1)
+	} else {
+		copy(c.mac, c.k2)
+		c.mac[c.n] ^= 0x80
+	}
+	xor(c.mac, c.x)
+	c.cipher.Encrypt(c.mac, c.mac)
+	return append(m, c.mac...)
 }
 
 // Reset the the CMAC
 func (c *cmac) Reset() {
-	for i := range c.mac {
-		c.mac[i] = 0
+	for i := range c.x {
+		c.x[i] = 0
+	}
+	c.n = 0
+}
+
+// xor stores a xor b in a. The length of b must be smaller or equal to a.
+func xor(a, b []byte) {
+	for i, v := range b {
+		a[i] ^= v
 	}
 }
 
