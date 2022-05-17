@@ -191,6 +191,7 @@ func TestMultiWrite(t *testing.T) {
 	for len(b) > 7 {
 		cm.Write(b[:7])
 		b = b[7:]
+		cm.Sum(nil)
 	}
 	cm.Write(b)
 

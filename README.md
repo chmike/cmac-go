@@ -32,10 +32,11 @@ if err != nil {
 }
 
 // Compute the CMAC of a message. Never returns an error.
-// The parameter may be an empty slice or nil.
+// The parameter may be an empty slice or nil. 
+// Write may be called multiple times.
 cm.Write([]byte("some message"))
 
-// Get the computed MAC.
+// Get the computed MAC. It may be followed by more Writes and sum calls.
 mac1 := cm.Sum(nil)
 
 // Important: use cmac.Equal() instead of bytes.Equal().
@@ -43,4 +44,8 @@ mac1 := cm.Sum(nil)
 if !cmac.Equal(mac1, mac2) {
     // mac mismatch
 }
+
+// Use Reset to clear the state of the cmac calculator. You may then
+// start processing a new message.
+cm.Reset()
 ```
