@@ -73,10 +73,10 @@ type cmac struct {
 	cipher      cipher.Block
 }
 
-// NewCipherFunc instatiates a block cipher
+// NewCipherFunc instantiates a block cipher
 type NewCipherFunc func(key []byte) (cipher.Block, error)
 
-// New returns a new CMAC hash using the given cipher instatiation function and key.
+// New returns a new CMAC hash using the given cipher instantiation function and key.
 func New(newCipher NewCipherFunc, key []byte) (hash.Hash, error) {
 	c, err := newCipher(key)
 	if err != nil {
@@ -112,6 +112,7 @@ func shiftLeftOneBit(dst, src []byte) {
 	}
 }
 
+// Write computes the cmac over m.
 func (c *cmac) Write(m []byte) (n int, err error) {
 	n = len(m)
 	for len(m) > c.blockSize {
