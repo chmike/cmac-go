@@ -18,10 +18,10 @@ func TestCMAC(t *testing.T) {
 	}
 	tmp := cm.(*cmac)
 	if !bytes.Equal(tmp.k1, k1) {
-		t.Errorf("k1 mismatch, got \n   %+v\nexpected\n   %+v", tmp.k1, k1)
+		t.Errorf("k1 mismatch, got \n   %+v\nexpected\n   %+v", tmp.k1, k1)
 	}
 	if !bytes.Equal(tmp.k2, k2) {
-		t.Errorf("k2 mismatch, got \n   %+v\nexpected\n   %+v", tmp.k2, k2)
+		t.Errorf("k2 mismatch, got \n   %+v\nexpected\n   %+v", tmp.k2, k2)
 	}
 
 	if !Equal(key, key) {
