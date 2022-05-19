@@ -17,9 +17,14 @@ func TestCMAC(t *testing.T) {
 	k1Bytes, _ := hex.DecodeString(k1)
 	k2Bytes, _ := hex.DecodeString(k2)
 
+	_, err := New(aes.NewCipher, nil)
+	if err == nil {
+		t.Fatal("unexpeced nil error")
+	}
+
 	cm, err := New(aes.NewCipher, keyBytes)
 	if err != nil {
-		panic(err)
+		t.Fatal("unexpected error: ", err)
 	}
 	tmp := cm.(*cmac)
 	if !bytes.Equal(tmp.k1, k1Bytes) {
@@ -37,6 +42,14 @@ func TestCMAC(t *testing.T) {
 	}
 	if Equal(keyBytes, k1Bytes[:5]) {
 		t.Errorf("got equal true, expected false")
+	}
+
+	if cm.Size() != len(keyBytes) {
+		t.Fatalf("expected Size %d, got %d", len(keyBytes), cm.Size())
+	}
+
+	if cm.Size() != cm.BlockSize() {
+		t.Fatalf("expected same Size and BlockSize")
 	}
 
 	tests := []struct {
