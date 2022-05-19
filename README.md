@@ -1,8 +1,8 @@
 [![GoDoc](https://img.shields.io/badge/go.dev-reference-blue)](https://pkg.go.dev/github.com/chmike/cmac-go)
-[![Build](https://travis-ci.org/chmike/cmac-go.svg?branch=master)](https://travis-ci.org/chmike/cmac-go?branch=master)
-![Status](https://img.shields.io/badge/status-stable-brightgreen.svg)
-[![Coverage](https://coveralls.io/repos/github/chmike/cmac-go/badge.svg?branch=master)](https://coveralls.io/github/chmike/cmac-go?branch=master)
+![Build](https://github.com/chmike/cmac-go/actions/workflows/workflow.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/chmike/cmac-go/branch/master/graph/badge.svg?token=9XNNVJXV1E)](https://codecov.io/gh/chmike/cmac-go)
 [![Go Report](https://goreportcard.com/badge/github.com/chmike/cmac-go)](https://goreportcard.com/report/github.com/chmike/cmac-go)
+![Status](https://img.shields.io/badge/status-stable-brightgreen.svg)
 ![release](https://img.shields.io/github/release/chmike/cmac-go.svg)
 
 # Cipher-based Message Authentication Code
